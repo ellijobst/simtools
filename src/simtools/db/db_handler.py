@@ -321,10 +321,18 @@ class DatabaseHandler:
             return cache_dict
         self._logger.debug(f"Did not find {array_element} in cache (key: {cache_key})")
 
-        try:
-            parameter_version_table = production_table["parameters"][array_element]
-        except KeyError:  # allow missing array elements (parameter dict is checked later)
-            return {}
+        if collection == "configuration_corsika":
+            try:
+                parameter_version_table = production_table["parameters"]
+            except KeyError:
+                print(f"Production table has no key 'parameters'. Exiting...")
+                exit()
+        else:
+            try:
+                parameter_version_table = production_table["parameters"][array_element]
+            except KeyError:  # allow missing array elements (parameter dict is checked later)
+                return {}
+
         DatabaseHandler.model_parameters_cached[cache_key] = self._read_mongo_db(
             query=self._get_query_from_parameter_version_table(
                 parameter_version_table, array_element, site
