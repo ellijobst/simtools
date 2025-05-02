@@ -122,6 +122,7 @@ class SiteModel(ModelParameter):
             List of array elements
         """
         layouts = self.get_parameter_value("array_layouts")
+        layouts = [layouts]
         for layout in layouts:
             if layout["name"] == layout_name.lower():
                 return layout["elements"]
