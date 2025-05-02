@@ -143,3 +143,7 @@ data:
     collection: "telescopes"
     site: "North"
     observatory: "VERITAS"
+  REVOLIACT:
+    collection: "telescopes"
+    site: "North"
+    observatory: "RevolIACT"
