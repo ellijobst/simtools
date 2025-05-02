@@ -321,7 +321,9 @@ class SimtelConfigReader:
             column[int(index)] = value
         if dtype == "bool":
             column = np.array([bool(int(item)) for item in column])
-
+        if dtype == "file":
+            # convert files into strings in order to process them correctly
+            dtype = "str"
         column, ndim = self._process_column(column, dtype)
         if not is_limit:
             column = self._add_units(column)
@@ -370,6 +372,8 @@ class SimtelConfigReader:
         dtype: str
             Data type to convert value to.
         """
+        if dtype == "file":
+            dtype = "str"
         if len(column) == 1:
             if column[0] is not None:
                 array_dtype = np.dtype(dtype) if dtype else None
