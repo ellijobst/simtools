@@ -279,6 +279,28 @@ class SimtelConfigWriter:
                 file.write(f"# include <{tel_config_file}>\n\n")
             file.write("#endif \n\n")  # configuration files need to end with \n\n
 
+        # fix issue with input-------------------------
+        with open(f"{config_file_directory}/{tel_config_file}", 'r') as file:
+            lines = file.readlines()
+
+        new_lines = []
+        for line in lines:
+            if line.startswith("nightsky_background ="):
+                prefix = "nightsky_background ="
+                items = line.strip().split('=')[1].strip().split()
+                for i in range(0, len(items), 5):
+                    chunk = items[i:i+5]
+                    new_line = f"{prefix} {' '.join(chunk)}\n"
+                    new_lines.append(new_line)
+                    prefix = "nightsky_background "
+            else:
+                new_lines.append(line)
+
+        with open(f"{config_file_directory}/{tel_config_file}", 'w') as file:
+            file.writelines(new_lines)
+        #--------------------------------------------
+
+
         if sim_telarray_seeds and sim_telarray_seeds.get("random_instrument_instances"):
             self._write_random_seeds_file(sim_telarray_seeds, config_file_directory)
 
@@ -570,6 +592,26 @@ class SimtelConfigWriter:
         self.write_telescope_config_file(
             config_file_path, parameters, telescope_name, write_dummy_config=True
         )
+        # fix issue with input-------------------------
+        with open(f"{config_file_path}", 'r') as file:
+            lines = file.readlines()
+
+        new_lines = []
+        for line in lines:
+            if line.startswith("nightsky_background ="):
+                prefix = "nightsky_background ="
+                items = line.strip().split('=')[1].strip().split()
+                for i in range(0, len(items), 5):
+                    chunk = items[i:i+5]
+                    new_line = f"{prefix} {' '.join(chunk)}\n"
+                    new_lines.append(new_line)
+                    prefix = "nightsky_background "
+            else:
+                new_lines.append(line)
+
+        with open(f"{config_file_path}", 'w') as file:
+            file.writelines(new_lines)
+        #--------------------------------------------
 
         config_file_directory = Path(config_file_path).parent
         self._write_dummy_mirror_list_files(config_file_directory, telescope_name)
