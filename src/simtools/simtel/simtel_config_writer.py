@@ -543,7 +543,8 @@ class SimtelConfigWriter:
             Array trigger for the telescope type.
         """
         for trigger_dict in array_triggers:
-            if trigger_dict["name"] == telescope_type + "_array":
+            # for a single telescope we replace _array with _single_telescope
+            if trigger_dict["name"] == telescope_type + "_single_telescope":
                 return trigger_dict
         return None
 
