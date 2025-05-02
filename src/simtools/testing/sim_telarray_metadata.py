@@ -3,6 +3,7 @@
 import logging
 
 import numpy as np
+import filecmp
 
 from simtools.simtel.simtel_config_reader import SimtelConfigReader
 from simtools.simtel.simtel_config_writer import sim_telarray_random_seeds
@@ -209,4 +210,8 @@ def _is_equal_floats_or_ints(value1, value2):
     if isinstance(value2, list) and isinstance(value1, float | int | np.integer | np.floating):
         if all(x == value2[0] for x in value2):
             return bool(np.isclose(float(value1), float(value2[0]), rtol=1e-10))
+    if isinstance(value1, str) and isinstance(value2, str):
+        equal_strings = True if value1 == value2 else False
+        equal_contents = filecmp.cmp(value1, value2, shallow=False) if equal_strings else equal_strings
+        return equal_contents
     return bool(np.isclose(float(value1), float(value2), rtol=1e-10))
